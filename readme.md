@@ -133,6 +133,10 @@ jobs:
   information:
     runs-on: ubuntu-latest
     steps:
+      - name: Get code
+        uses: actions/checkout@v3
       - name: Run Custom Action
         uses: ./github/actions/my-js-s3-upload
 ```
+
+Always, make sure if you are using the action within the repository, always pull the code first.
