@@ -82,4 +82,3 @@ Or you dont need to explicitly declare `action.yml`. It will automatically searc
 - name: Load & Cache dependencies
   uses: ./.github/actions/cache-deps
 ```
-
