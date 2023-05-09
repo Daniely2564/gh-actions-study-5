@@ -82,3 +82,57 @@ Or you dont need to explicitly declare `action.yml`. It will automatically searc
 - name: Load & Cache dependencies
   uses: ./.github/actions/cache-deps
 ```
+
+## Javascript Actions
+
+[Javascript Action Docs](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action)
+
+Javascript requires to have a javascript file in the same directory and also must declare `runs` -> `using` as `node16` or other versions.
+
+More can be found on this [link](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-javascript-actions)
+
+`post` and `pre` can be declared as needed. These are separate javascript file that can run on as needed.
+
+Example
+
+```yml
+name: "Name"
+description: "Description"
+runs:
+  using: "node16"
+  pre: "my-pre.js"
+  main: "my-main.js"
+  post: "my-post.js"
+```
+
+You can install all kinds of dependencies from github toolkits. You can find toolkits from [here](https://github.com/actions/toolkit)
+
+In our example, we will install `@actions/core`, `@actions/github`, `@actions/exec`.
+Inside of main js file, `my-runner.js`,
+
+**Importantly**, you have to install the dependencies in the action directory and node_modules must also be pushed to the repository for the use.
+
+`my-runner.js`
+
+```js
+const core = require("@actions/core");
+const github = require("@actions/github");
+const exec = require("@actions/exec");
+
+function run() {
+  core.notice("Hello from my custom Javascript Action!");
+}
+
+run();
+```
+
+Once imported, you can again import javascript action as below.
+
+```yml
+jobs:
+  information:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Custom Action
+        uses: ./github/actions/my-js-s3-upload
+```
