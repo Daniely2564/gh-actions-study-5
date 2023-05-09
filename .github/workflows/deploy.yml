@@ -79,4 +79,4 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Run Custom Action
-        uses: ./github/actions/my-js-s3-upload
+        uses: ./.github/actions/my-js-s3-upload
