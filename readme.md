@@ -140,3 +140,74 @@ jobs:
 ```
 
 Always, make sure if you are using the action within the repository, always pull the code first.
+
+### Getting Inputs to the javascript action
+
+What if you want to the created artifact to the s3? And also, you would like to pass in the s3 bucket, dist folder and other information as input to javascript instead of hard-coding. You will first update the action.yml as follow:
+
+```yml
+name: "Deploy to AWS S3"
+description: "Deploy a static website via AWS S3."
+inputs:
+  my-input:
+    description: "My Input Description"
+    required: true
+    default: "abcdefg"
+  my-input-2:
+    description: "My Input 2 Description"
+    required: false
+    default: "us-east-1"
+  dist-folder:
+    description: "The folder containing the deployable file..."
+    required: true
+runs:
+  using: "node16"
+  main: "my-runner.js"
+```
+
+As you can see, we've declared the new field input and passed in the array object with description and other fields. Now you can update your javascript code as follows.
+
+```js
+function run() {
+  const myInput = core.getInput("my-input", {
+    required: true,
+  });
+  const myInput2 = core.getInput("my-input-2", { required: false });
+  const distFolder = core.getInput("dist-folder", { required: true });
+
+  console.log(myInput, myInput2, distFolder);
+}
+```
+
+Now question arises. In order to interact with s3 bucket, you need to have `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. These should be declared not **inside** of the code but as environment variables. How would you solve this issue?
+
+Can solve this by passing variables in the workflow yml file.
+The workflow can be updated as
+
+```yml
+- name: Deploy site
+  uses: ./.github/actions/my-js-s3-upload
+  env:
+    AWS_ACCESS_KEY_ID: 123123
+    AWS_SECRET_ACCESS_KEY_ID: 123123
+  with:
+    my-input: "Hello World"
+    my-input-2: "Hello World 2"
+    dist-folder: "DistDist"
+```
+
+Of course you can avoid passing in explicitly using the github secret. `Repo` -> `Settings` -> `Actions` -> `Actions secrets` -> `New repository secret`
+
+Now the worfklow job will be updated as follow.
+
+```yml
+- name: Deploy site
+  uses: ./.github/actions/my-js-s3-upload
+  env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+  with:
+    my-input: "Hello World"
+    my-input-2: "Hello World 2"
+    dist-folder: "DistDist"
+```

@@ -1,5 +1,17 @@
 name: "Deploy to AWS S3"
 description: "Deploy a static website via AWS S3."
+inputs:
+  my-input:
+    description: "My Input Description"
+    required: true
+    default: "abcdefg"
+  my-input-2:
+    description: "My Input 2 Description"
+    required: false
+    default: "us-east-1"
+  dist-folder:
+    description: "The folder containing the deployable file..."
+    required: true
 runs:
   using: "node16"
   main: "my-runner.js"
