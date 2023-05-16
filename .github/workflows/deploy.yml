@@ -61,6 +61,8 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      my-output: ${{ steps.deploy.outputs.my-output }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -87,4 +89,4 @@ jobs:
     steps:
       - name: Output Information
         run: |
-          echo "My Custom Output is ${{ steps.deploy.outputs.my-output }}"
+          echo "My Custom Output is ${{ jobs.deploy.outputs.my-output }}"
