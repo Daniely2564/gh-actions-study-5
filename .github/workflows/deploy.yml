@@ -89,4 +89,4 @@ jobs:
     steps:
       - name: Output Information
         run: |
-          echo "My Custom Output is ${{ jobs.deploy.outputs.my-output }}"
+          echo "My Custom Output is ${{ needs.deploy.outputs.my-output }}"
