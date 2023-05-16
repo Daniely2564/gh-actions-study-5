@@ -23,6 +23,10 @@ function run() {
   // 3. Github
   // This github object makes the request to github easy.
   github;
+
+  // 4. Working with Outputs.
+  const myoutput = "abcdef";
+  core.setOutput("my-output", myoutput);
 }
 
 run();

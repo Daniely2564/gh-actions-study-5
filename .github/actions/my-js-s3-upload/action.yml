@@ -12,6 +12,10 @@ inputs:
   dist-folder:
     description: "The folder containing the deployable file..."
     required: true
+outputs:
+  my-output:
+    description: My custom output from javascript code
+    # You dont add value like inputs
 runs:
   using: "node16"
   main: "my-runner.js"

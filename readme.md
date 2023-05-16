@@ -211,3 +211,45 @@ Now the worfklow job will be updated as follow.
     my-input-2: "Hello World 2"
     dist-folder: "DistDist"
 ```
+
+### Exporting outputs from javascript
+
+1. First include outputs field in the `action.yml` file. We will include that under `inputs` field.
+
+```yml
+outputs:
+  my-output:
+    description: My custom output from javascript code
+    # You dont add value like inputs
+```
+
+Now you can export the ouput from the javascript. Exporting is simple.
+
+```js
+// inside run function
+const myoutput = "abcdef";
+core.setOutput("my-output", myoutput);
+```
+
+This can be picked up in our main `workflow` file. In the job steps, first provide `id` for the `step` using the javascript,
+
+```yml
+- name: Deploy site
+  id: deploy
+  uses: ./.github/actions/my-js-s3-upload
+  env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+  with:
+    my-input: "Hello World"
+    my-input-2: "Hello World 2"
+    dist-folder: "DistDist"
+```
+
+and use the output as below
+
+```yml
+- name: Output Information
+  run: |
+    echo "My Custom Output is ${{ steps.deploy.outputs.my-output }}"
+```
